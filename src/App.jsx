@@ -3,6 +3,18 @@ import { useAuth } from 'react-oidc-context';
 function App() {
   const auth = useAuth();
 
+  // ダミーAPIを呼び出す関数
+  const callApi = async () => {
+    const response = await fetch("http://localhost:8080/api/hello", {
+      headers: {
+        Authorization: `Bearer ${auth.user.access_token}`,
+      },
+    });
+
+    const text = await response.text();
+    console.log(text);
+  };
+
   // JWT トークンをデコードする関数
   const decodeToken = (token) => {
     try {
@@ -62,8 +74,11 @@ function App() {
           <button onClick={() => auth.removeUser()} style={{ marginRight: '10px' }}>
             Clear Storage
           </button>
-          <button onClick={() => auth.signoutRedirect()}>
+          <button onClick={() => auth.signoutRedirect()} style={{ marginRight: '10px' }}>
             Log out
+          </button>
+          <button onClick={callApi} style={{ marginRight: '10px' }}>
+            Call API
           </button>
         </div>
       </div>
