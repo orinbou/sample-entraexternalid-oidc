@@ -85,7 +85,7 @@
 2.  `.env.local` 内の以下の値を実際の環境に合わせて書き換えます。
     - `VITE_OIDC_AUTHORITY`: `https://{initial_domain_name or organization_id}.ciamlogin.com/{initial_domain_name or organization_id}.onmicrosoft.com/v2.0`
     - `VITE_OIDC_CLIENT_ID`: 登録したSPAアプリの「アプリケーション (クライアント) ID」
-    - `VITE_OIDC_SCOPE`: 要求するスコープ（例: `openid profile email  api://{your_api_client_id}/.default`）。
+    - `VITE_OIDC_SCOPE`: 要求するスコープ（例: `openid profile email api://{your_api_client_id}/.default`）。
 
 ### 5. アプリケーションの実行
 
