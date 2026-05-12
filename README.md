@@ -25,12 +25,12 @@
 * テナントの作成
 ![alt text](images/image00.png)
 
-### 2. Microsoft Entra External ID でのアプリ登録
+### 2. Microsoft Entra External ID でのアプリ登録①（SPA）
 
 1.  新規作成テナントで、「Microsoft Entra ID」を選択します。
 2.  「アプリの登録」→「新規登録」をクリックします。
-3.  名前を入力し（例: `web-app-sample`）、サポートされているアカウントの種類を選択します。
-4.  「登録」をクリック後、左メニューの「認証」を選択します。
+3.  名前を入力し（例: `web-app-external`）、サポートされているアカウントの種類（任意の Entra ID テナント + 個人用 Microsoft アカウント）を選択します。
+4.  「登録」をクリック後、左メニューの「Authentication」を選択します。
 5.  「プラットフォームを追加」→「シングルページ アプリケーション (SPA)」をクリックします。
 6.  リダイレクト URI に `http://localhost:5173` を入力し、「構成」をクリックします。
 7.  左メニューの「管理」→「マニフェスト」をクリックして「AAD Graph アプリ マニフェスト」のJSONを以下のとおり変更します。
@@ -39,37 +39,55 @@
 変更後: "accessTokenAcceptedVersion": 2,     ← v2.0 トークンを発行
 ```
 
-#### （参考）アプリ登録の設定例を以下に掲載しておきます。
+### 3. Microsoft Entra External ID でのアプリ登録②（API）
+
+1.  新規作成テナントで、「Microsoft Entra ID」を選択します。
+2.  「アプリの登録」→「新規登録」をクリックします。
+3.  名前を入力し（例: `web-api-external`）、サポートされているアカウントの種類（シングルテナントのみ）を選択します。
+4.  「登録」をクリック後、左メニューの「API の公開」を選択します。
+5.  「アプリケーション ID URI」とスコープ（スコープ名：`access_as_user`）を追加します。
+6.  左メニューの「管理」→「マニフェスト」をクリックして「AAD Graph アプリ マニフェスト」のJSONを以下のとおり変更します。
+```
+変更前: "accessTokenAcceptedVersion": null,  ← v1.0 トークンを発行（デフォルト値）
+変更後: "accessTokenAcceptedVersion": 2,     ← v2.0 トークンを発行
+```
+7.  ひとつ前に作成したアプリ「web-app-external」の「API のアクセス許可」から作成したAPIアプリへのアクセス許可を追加します。
+
+#### （参考）アプリ登録①、②の設定例を以下に掲載しておきます。
+
+* Sample External Organization | アプリの登録　→　すべてのアプリケーション
+  ![alt text](images/image01.png)
+
+##### アプリ登録①（SPA）
 
 * 概要
-![alt text](images/image00.png)
+  ![alt text](images/image02.png)
 
 * 管理 -> Authentication (Preview)：リダイレクトURIの構成
-![alt text](images/image01.png)
-
-* 管理 -> Authentication (Preview)：設定
-![alt text](images/image02.png)
+  ![alt text](images/image03.png)
 
 * 管理 -> API のアクセス許可
-![alt text](images/image03.png)
+  ![alt text](images/image04.png)
+
+##### アプリ登録②（API）
+
+* 概要
+  ![alt text](images/image05.png)
 
 * 管理 -> API の公開
-![alt text](images/image04.png)
+  ![alt text](images/image06.png)
 
-* セキュリティ -> アクセス許可　※これは「エンタープライズ アプリケーション」の設定です
-![alt text](images/image05.png)
-
-### 2. 環境変数の設定
+### 4. 環境変数の設定
 
 ローカル開発用の設定ファイルを作成します。Vite の仕様により、`.env.local` ファイルは自動的に読み込まれ、他の設定ファイルよりも優先されます。
 
 1.  `.env.sample1` または `.env.sample2` をコピーして `.env.local` を作成します。
 2.  `.env.local` 内の以下の値を実際の環境に合わせて書き換えます。
-    - `VITE_OIDC_AUTHORITY`: `https://login.microsoftonline.com/{あなたのテナントID}/v2.0`
-    - `VITE_OIDC_CLIENT_ID`: 登録したアプリの「アプリケーション (クライアント) ID」
-    - `VITE_OIDC_SCOPE`: 要求するスコープ（例: `openid profile email`）。
+    - `VITE_OIDC_AUTHORITY`: `https://{initial_domain_name or organization_id}.ciamlogin.com/{initial_domain_name or organization_id}.onmicrosoft.com/v2.0`
+    - `VITE_OIDC_CLIENT_ID`: 登録したSPAアプリの「アプリケーション (クライアント) ID」
+    - `VITE_OIDC_SCOPE`: 要求するスコープ（例: `openid profile email  api://{your_api_client_id}/.default`）。
 
-### 3. アプリケーションの実行
+### 5. アプリケーションの実行
 
 使用する設定ファイルに応じて、以下のコマンドで起動します。
 
