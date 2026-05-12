@@ -108,7 +108,7 @@ npm run dev:sample2
 
 起動後、 `http://localhost:5173` にアクセスしてください。
 
-![alt text](images/image06.png)
+![alt text](images/image07.png)
 
 ## 使い方
 
