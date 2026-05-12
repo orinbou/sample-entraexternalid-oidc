@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Production build
+dist/
+
+# Env files (contains real secrets/IDs)
+.env.local
+.env.*.local
+
+# Debug/Results (contains OIDC tokens and PII)
+results/
+*.log
+
+# IDE files
+.vscode/
+.DS_Store
